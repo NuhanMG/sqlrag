@@ -1,0 +1,45 @@
+# ==============================================================================
+# Python Version: 3.12.7
+# All libraries below are tested and compatible with Python 3.12.7
+# ==============================================================================
+
+# ==============================================================================
+# CORE DATA PROCESSING
+# ==============================================================================
+pandas==2.2.3              # Data manipulation and analysis
+numpy==1.26.4              # Numerical computing (Python 3.12 compatible)
+dask==2024.12.1            # Parallel computing for large datasets
+dask[dataframe]==2024.12.1 # Dask DataFrame support
+
+# ==============================================================================
+# LANGCHAIN & LLM FRAMEWORK
+# ==============================================================================
+langchain==0.3.14          # LangChain core framework
+langchain-core==0.3.29     # LangChain core abstractions
+langchain-community==0.3.14  # Community integrations (SQLDatabase, tools)
+langchain-ollama==0.2.2    # Ollama integration for local LLMs
+pydantic==2.10.5           # Data validation and parsing (Python 3.12 compatible)
+pydantic-core==2.27.2      # Pydantic core dependency
+
+# ==============================================================================
+# VECTOR DATABASES
+# ==============================================================================
+chromadb==0.5.23           # Vector database for metadata storage
+chroma-hnswlib==0.7.6      # HNSW implementation for ChromaDB
+
+# ==============================================================================
+# VISUALIZATION
+# ==============================================================================
+plotly==5.24.1             # Interactive visualizations
+
+# ==============================================================================
+# USER INTERFACE
+# ==============================================================================
+gradio==5.9.1              # Web UI framework
+
+# ==============================================================================
+# CONFIGURATION & UTILITIES
+# ==============================================================================
+python-dotenv==1.0.1       # Environment variable management
+requests==2.32.3           # HTTP library
+
