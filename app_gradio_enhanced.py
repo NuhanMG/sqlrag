@@ -10,7 +10,7 @@ import pandas as pd
 from dotenv import load_dotenv
 
 from QueryAgent_Ollama_Enhanced import QueryAgentEnhanced
-from conversation_manager import ConversationState
+from conversation_manager import ConversationState, parse_datetime
 from dataframe_factory import DataFrameFactory, ensure_pandas, get_backend_name
 
 # Load environment variables from .env file
@@ -70,7 +70,7 @@ def get_conversation_list() -> List[Tuple[str, str]]:
             # Format date
             ts = data.get('start_time', datetime.now().isoformat())
             try:
-                dt = datetime.fromisoformat(ts)
+                dt = parse_datetime(ts)
                 date_str = dt.strftime("%m/%d %H:%M")
             except Exception:
                 date_str = ""
