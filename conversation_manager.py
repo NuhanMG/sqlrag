@@ -9,6 +9,45 @@ import uuid
 import pandas as pd
 
 
+def parse_datetime(dt_str: str) -> datetime:
+    """
+    Parse datetime string robustly, handling multiple formats.
+    Handles ISO format with 'T' separator and space-separated formats.
+    
+    Args:
+        dt_str: DateTime string to parse
+        
+    Returns:
+        Parsed datetime object
+    """
+    if not dt_str:
+        return datetime.now()
+    
+    try:
+        # Try standard fromisoformat first (handles 'T' separator)
+        return datetime.fromisoformat(dt_str)
+    except ValueError:
+        pass
+    
+    # Try common formats
+    formats = [
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%d %H:%M:%S.%f",
+        "%Y-%m-%dT%H:%M:%S",
+        "%Y-%m-%dT%H:%M:%S.%f",
+        "%Y-%m-%d",
+    ]
+    
+    for fmt in formats:
+        try:
+            return datetime.strptime(dt_str, fmt)
+        except ValueError:
+            continue
+    
+    # If all parsing fails, return current time
+    return datetime.now()
+
+
 @dataclass
 class Message:
     """Represents a single message in the conversation"""
@@ -131,14 +170,14 @@ class ConversationState:
     def import_conversation(self, data: Dict):
         """Import conversation state from dict"""
         self.conversation_id = data.get("conversation_id", str(uuid.uuid4()))
-        self.start_time = datetime.fromisoformat(data.get("start_time", datetime.now().isoformat()))
+        self.start_time = parse_datetime(data.get("start_time", datetime.now().isoformat()))
         
         # Import messages
         self.messages = [
             Message(
                 role=msg["role"],
                 content=msg["content"],
-                timestamp=datetime.fromisoformat(msg["timestamp"]),
+                timestamp=parse_datetime(msg["timestamp"]),
                 sql_query=msg.get("sql_query"),
                 dataframe_snapshot=None,  # Cannot restore full dataframe
                 visualization=msg.get("visualization"),
@@ -155,7 +194,7 @@ class ConversationState:
                 columns=ctx["columns"],
                 row_count=ctx["row_count"],
                 sample_data={},
-                timestamp=datetime.fromisoformat(ctx["timestamp"])
+                timestamp=parse_datetime(ctx["timestamp"])
             )
             for ctx in data.get("data_contexts", [])
         ]
@@ -166,7 +205,7 @@ class ConversationState:
                 question=viz["question"],
                 chart_type=viz["chart_type"],
                 data_summary=viz["data_summary"],
-                timestamp=datetime.fromisoformat(viz["timestamp"])
+                timestamp=parse_datetime(viz["timestamp"])
             )
             for viz in data.get("visualizations", [])
         ]

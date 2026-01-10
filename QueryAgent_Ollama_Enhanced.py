@@ -127,7 +127,13 @@ class QueryAgentEnhanced:
         
         # Initialize connections
         self.conn = sqlite3.connect(source_db_path, check_same_thread=False)
-        self.db = SQLDatabase.from_uri(f"sqlite:///{source_db_path}")
+        
+        # Create SQLAlchemy engine for LangChain SQLDatabase
+        # Use sample_rows_in_table_info=0 to prevent datetime parsing errors
+        # when SQLite has DATE columns with space-separated datetime values
+        from sqlalchemy import create_engine
+        engine = create_engine(f"sqlite:///{source_db_path}")
+        self.db = SQLDatabase(engine=engine, sample_rows_in_table_info=0)
         
         # Initialize ChromaDB and vector database
         self._setup_vector_database()
